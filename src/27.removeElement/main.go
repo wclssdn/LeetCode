@@ -9,7 +9,7 @@ func main() {
 	fmt.Println(nums, r)
 }
 
-func removeElement(nums []int, val int) int {
+/*func removeElement(nums []int, val int) int {
 	pos := 0
 	length := len(nums)
 	for i := 0; i < length; i++ {
@@ -20,4 +20,20 @@ func removeElement(nums []int, val int) int {
 		}
 	}
 	return len(nums)
+}
+*/
+func removeElement(nums []int, val int) int {
+	pos := 0
+	length := len(nums)
+	for i := 0; i < length; i++ {
+		if val == nums[i] {
+			nums[pos] = nums[i]
+		} else {
+			if pos != i {
+				nums[pos] = nums[i]
+			}
+			pos++
+		}
+	}
+	return pos
 }
