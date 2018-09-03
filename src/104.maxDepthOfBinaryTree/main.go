@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 )
 
 func main() {
@@ -35,12 +36,12 @@ func maxDepth(root *TreeNode) int {
 	if root == nil {
 		return 0
 	}
-	return 1 + max(maxDepth(root.Left), maxDepth(root.Right))
+	return 1 + int(math.Max(float64(maxDepth(root.Left)), float64(maxDepth(root.Right))))
 }
 
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
+//func max(a, b int) int {
+//	if a > b {
+//		return a
+//	}
+//	return b
+//}
