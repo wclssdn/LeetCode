@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"sort"
 )
 
 // https://leetcode.com/problems/min-stack/
@@ -510,12 +509,13 @@ func main() {
 	fmt.Println("min:", min, "top:", top)
 }
 
+type e struct {
+	v   int
+	min int
+}
+
 type MinStack struct {
-	stack    []int
-	hasMin   bool
-	min      int
-	minCount int
-	sorted   []int
+	stack []*e
 }
 
 /** initialize your data structure here. */
@@ -524,51 +524,34 @@ func Constructor() MinStack {
 }
 
 func (s *MinStack) Push(x int) {
-	s.stack = append(s.stack, x)
-	if !s.hasMin {
-		s.min = x
-		s.minCount = 1
-		s.hasMin = true
-	} else if s.min > x {
-		s.min = x
-		s.minCount = 1
-	} else if s.min == x {
-		s.minCount++
+	if len(s.stack) == 0 {
+		s.stack = append(s.stack, &e{
+			v:   x,
+			min: x,
+		})
+		return
+	}
+	if s.stack[len(s.stack)-1].min > x {
+		s.stack = append(s.stack, &e{
+			v:   x,
+			min: x,
+		})
+	} else {
+		s.stack = append(s.stack, &e{
+			v:   x,
+			min: s.stack[len(s.stack)-1].min,
+		})
 	}
 }
 
 func (s *MinStack) Pop() {
-	e := s.stack[len(s.stack)-1]
 	s.stack = s.stack[:len(s.stack)-1]
-	if e == s.min {
-		s.minCount--
-		if s.minCount == 0 {
-			if len(s.stack) == 0 {
-				s.min = 0
-				s.hasMin = false
-			} else {
-				// resort
-				s.sorted = make([]int, len(s.stack))
-				copy(s.sorted, s.stack)
-				sort.Ints(s.sorted)
-				s.min = s.sorted[0]
-				s.minCount = 1
-				for i := 1; i < len(s.sorted); i++ {
-					if s.min == s.sorted[i] {
-						s.minCount++
-					} else {
-						break
-					}
-				}
-			}
-		}
-	}
 }
 
 func (s *MinStack) Top() int {
-	return s.stack[len(s.stack)-1]
+	return s.stack[len(s.stack)-1].v
 }
 
 func (s *MinStack) GetMin() int {
-	return s.min
+	return s.stack[len(s.stack)-1].min
 }
